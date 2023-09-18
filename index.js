@@ -1,5 +1,6 @@
 // Day-10
-const express = require("express"); // 3rd party package imported
+// const express = require("express"); // 3rd party package imported // "type": "commonjs"
+import express from "express"; // "type": "module"
 const app = express(); // Calling the imported package and we get app. This app contains different rest API methods post, get, put, delete.
 
 const PORT = 4000; // use port 4000
@@ -97,16 +98,37 @@ const movies = [
   ]
 
 app.get("/", function (request, response) {
-  response.send("🙋‍♂️, 🌏 🎊✨🤩");
+  response.send("Hello🙋‍♂️, world🌏 🎊✨🤩!!!");
 }); // applying get method : Here “/ ” -> path (Home page) So when you open home page, the callback function will run. In that callback we are passing 2 objects request and response.
 // In this code we are telling when we open the home page, we will get the response 🙋‍♂️, 🌏 🎊✨🤩 .
-
 
 app.get("/movies", function (request, response) {
   response.send(movies);
 }); // Step:2
 
+app.get("/movies/:id", function (request, response) { // Step:3 converting into variable by putting : before the key.
+  const {id} = request.params; // Step:4
+  console.log(request.params, id); // Step:5
+  // const movie = movies.filter((mv) => mv.id == id); // step:6
+  // const movie = movies.filter((mv) => mv.id == id)[0]; // step:7
+  const movie = movies.find((mv) => mv.id == id); // step:8 filter returns array, so we go for find.
+  // response.send(movie); // step:9
+  console.log(movie);
+  // movie ? response.send(movie) : response.send({message: "movie not found"}); // step:10 when serach item not found means.
+  movie ? response.send(movie) : response.status(404).send({message: "movie not found"}); // Step:11 adding status
+
+}); 
+
 app.listen(PORT, () => console.log(`The server started in: ${PORT} ✨✨`)); // Starting your app. When your app is started the callback function executed. So you will get the message inside it.
 
 // Task 1
 // http://localhost:4000/movies - movies (data)
+// In node , the server will not automatically restart. So we have to restart it manually for every updates.
+// 1. ctrl+c -> kill the old terminal
+// 2. node index.js -> run the terminal.
+
+// Task 2
+// http://localhost:4000/movies/99 - random id, particular movie data
+
+// Applying latest Import & exports: // Step:12 refer word notes or refer the link -> https://ragavkumarv.com/blog/setup-express/#introduction
+// Step:13 install postman when not installed and then sign in.
