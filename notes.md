@@ -20,5 +20,6 @@ open a folder -> create a file eg: sum.js -> open a terminal -> type node<space>
 // Work flow : postman sent API link -> express.json() converts JSON -> JS object -> async funnction use the JS object data
 
 ### day-12
-
+query params -> in google or any other search bar, when you seach an item you will can notice (For eg: http link + `?search_query=ps2`). here we are filtering an item.
+  
 env -> environment variable
