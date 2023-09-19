@@ -7,7 +7,8 @@ dotenv.config();
 
 const app = express();
 
-const PORT = 4000;
+// const PORT = 4000; // In local server we can set const port value. but when deploying to online you cann't fix the port value
+const PORT = process.env.PORT; // Auto assign PORT
 
 // connection
 // const MONGO_URL = "mongodb://127.0.0.1"; // local db
