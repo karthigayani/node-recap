@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import {client} from "../index.js";
+import { getMovies, getMovieById, createMovies, deleteMovieById, updateMovieById } from "../services/movies.service.js";
 
   router.get("/", async function (request, response) {
     // request.query returns string value.
@@ -21,7 +21,7 @@ import {client} from "../index.js";
     
     // query params: in google or any other search bar, when you seach an item you will can notice (For eg: http link + `?search_query=ps2`). here we are filtering an item.
     // const movies = await client.db("recap").collection("movies").find({name:"RRR"}).toArray();
-    const movies = await client.db("recap").collection("movies").find(request.query).toArray();
+    const movies = await getMovies(request);
     // console.log(movies);
     response.send(movies);
   });
@@ -32,7 +32,7 @@ import {client} from "../index.js";
     // const movie = movies.find((mv) => mv.id == id); // using local data
     // getting data from database
     // db.movies.findOne({id:'100'}) -> db query
-    const movie = await client.db("recap").collection("movies").findOne({id: id});
+    const movie = await getMovieById(id);
   
     console.log(movie);
    
@@ -49,7 +49,7 @@ import {client} from "../index.js";
     const data = request.body;
     console.log(data);
     // db.movies.insertMany(data)
-    const result = await client.db("recap").collection("movies").insertMany(data);
+    const result = await createMovies(data);
   
     response.send(result);
   });
@@ -58,10 +58,7 @@ import {client} from "../index.js";
     const {id} = request.params; 
     
     // db.movies.deleteOne({id:'100'}) -> db query
-    const result = await client
-    .db("recap")
-    .collection("movies")
-    .deleteOne({id: id});
+    const result = await deleteMovieById(id);
   
     console.log(result);
     result.deletedCount 
@@ -74,10 +71,7 @@ import {client} from "../index.js";
     const {id} = request.params; 
     const data = request.body;
     // db.movies.updateOne({id:'100'},{$set:{rating:9}}) -> db query
-    const result = await client
-    .db("recap")
-    .collection("movies")
-    .updateOne({id: id},{$set:data});
+    const result = await updateMovieById(id, data);
   
     console.log(result);
     response.send(result); 
@@ -85,3 +79,5 @@ import {client} from "../index.js";
   });
 
 export default router;
+
+
