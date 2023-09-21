@@ -1,7 +1,11 @@
 import express from "express";
 import { createUser, generateHashedPassword, getUserByName } from "../services/users.service.js"; // step:4 import getUserByName
+import bcrypt from "bcrypt"; // step:16 importing bcrypt
+import jwt from "jsonwebtoken"; // step:19 install and import jsonwebtoken
 const router = express.Router();
-  router.post("/signup", async function (request, response) {
+
+// signup function
+router.post("/signup", async function (request, response) {
     
     const {username, password} = request.body; 
 
@@ -31,7 +35,44 @@ const router = express.Router();
     }); 
     response.send(result);
     }
-  }); 
+  });
+
+  // Login function
+  router.post("/login", async function (request, response) { // step:9 change router link signup -> login 
+    const {username, password} = request.body; 
+    const userFromDB = await getUserByName(username);
+    console.log(userFromDB);
+
+    if (!userFromDB){ // step:10 condition applied (username not present)
+      response
+      .status(401) // step:12 Unautorized (change 400 -> 401)
+      .send({message: "Invalid credentials"}); // Step: 11 When you mention username not exist it is also an information for hackers. 
+                                               //So don't mention invalid username or password particularly. Always give general message.
+    }
+    else{ // step:13 userFromDB present means you have to check password matches or not
+      const storedDBPassword = userFromDB.password; // step:14 getting stored password from database 
+      const isPasswordCheck = await bcrypt.compare(password, storedDBPassword); // step:15 comparing password with storedDBPassword
+      console.log(isPasswordCheck);
+
+      if (isPasswordCheck) { // step:17 isPasswordCheck = true
+        const token = jwt.sign({id: userFromDB._id}, process.env.SECRET_KEY); // step:20 Generating token: 1st arg -> unique value, 2nd arg -> secret key
+        // step:21 Go to .env file and define SECRET_KEY value.
+        // response.send({message: "Successful login"}); 
+        response.send({message: "Successful login", token: token}); // Step:22 send token with message.
+
+        // Step: 23 Now run your node app "npm run dev" and go to your postman, in the login link press send.
+          // You will get successful login message with token. now copy the token value and pass which are the links you want
+          // at the headers by key and value. (Header is the common place for all methods like GET,POST,Delete,PUT)
+          // key -> x-auth-token (Industry standard name) and values -> token value.(copy the token value inside the "").
+          // Now you can send "x-auth-token" as middleware in the API's.
+      }
+      else { // step:18 isPasswordCheck = False
+        response
+        .status(401)
+        .send({message: "Invalid credentials"})
+      }
+    }   
+  });
 export default router;
 
 
