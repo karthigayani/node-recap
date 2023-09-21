@@ -1,29 +1,59 @@
 import express from "express";
-import { createUser, generateHashedPassword } from "../services/users.service.js"; // step:1 import generateHashedPassword
+import { createUser, generateHashedPassword, getUserByName } from "../services/users.service.js"; // step:4 import getUserByName
 const router = express.Router();
-
-
   router.post("/signup", async function (request, response) {
-    // const {data} = request.body; // step:2
-    const {username, password} = request.body; // step:2 put {username, password} instead of data.
-    // console.log(data);
-
     
-    // const result = await createUser({username, password}); // step:3 put {username, password} instead of data.
-    // step:3 But when you send password directly your data can be readed. So if you send hashedPassword your data becomes safe.
+    const {username, password} = request.body; 
 
-    // const hashedPassword = generateHashedPassword(password); // step:4 function call
-    const hashedPassword = await generateHashedPassword(password); // step:6 async function call so we put await before
-    
-    // step:5 Assign username itself username and hashedPassword for password.
-    const result = await createUser({
+    // const userFromDB = getUserByName(username); // step:1 checking username already exist in DB or not
+    const userFromDB = await getUserByName(username); // step:2 creating a function getUserByName -> returns promise -> So it is async function put await.
+    // step:3 refer user.service.js
+    console.log(userFromDB); // step:5 
+    // step:6 pass the username already exist and not exist in db by postman and see the result in terminal.
+
+    // step:7 validate by passing condition
+    if (userFromDB){
+      // response.send({message: "Username already exist"});
+      response
+      .status(400)
+      .send({message: "Username already exist"}); // You can add status bad request
+    } 
+    else if(password.length < 8){ // step:8 validating password
+      response
+      .status(400)
+      .send({message: "Password must be at least 8 characters"});
+    }
+    else {
+      const hashedPassword = await generateHashedPassword(password);
+      const result = await createUser({
       username : username, 
       password : hashedPassword
-    }); // step:5 
-    
-    response.send(result); // sending response
-  });
-  
+    }); 
+    response.send(result);
+    }
+  }); 
 export default router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

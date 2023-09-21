@@ -10,9 +10,14 @@ export async function generateHashedPassword(password){
   return hashedPassword;
 }
 
-// generateHashedPassword("password@123");
-
-
 export async function createUser(data) {
   return await client.db("recap").collection("users").insertOne(data); //insertOne -> when signup you can send one user data only
+}
+
+// step:3 copy the getMovieById function template from movies.service.js and make edit for user
+export async function getUserByName(username){ 
+  return await client
+  .db("recap")
+  .collection("users")
+  .findOne({ username: username }); 
 }
