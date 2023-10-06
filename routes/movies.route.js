@@ -1,8 +1,11 @@
 import express from "express";
 const router = express.Router();
 import { getMovies, getMovieById, createMovies, deleteMovieById, updateMovieById } from "../services/movies.service.js";
+import { auth } from "../middleware/auth.js"; // step:29 importing auth middleware
 
-  router.get("/", async function (request, response) {
+  // router.get("/", async function (request, response) { 
+  router.get("/", auth, async function (request, response) { // step:28 passing auth middleware
+    
     // request.query returns string value.
     // In our movies collection rating is in number. So if request.query is rating means convert them into number.
     if(request.query.rating){
