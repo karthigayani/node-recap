@@ -29,7 +29,8 @@ import { auth } from "../middleware/auth.js"; // step:29 importing auth middlewa
     response.send(movies);
   });
   
-  router.get("/:id",async function (request, response) { 
+  // router.get("/:id",async function (request, response) { 
+  router.get("/:id", auth, async function (request, response) { // step:35 passing auth middleware
     const {id} = request.params; 
     // console.log(request.params, id); 
     // const movie = movies.find((mv) => mv.id == id); // using local data
@@ -43,7 +44,8 @@ import { auth } from "../middleware/auth.js"; // step:29 importing auth middlewa
   
   }); 
    
-  router.post("/", async function (request, response) {
+  // router.post("/", async function (request, response) {
+  router.post("/", auth, async function (request, response) { // step:35 passing auth middleware
     // middleware -> applied in the middle of API and async function
         // node does not know whether our sending data is XML/JSON/Text.
         // express.json() -> inbuilt middleware in express -> which confirms our sending data in JSON and converts it into JS object
@@ -57,7 +59,8 @@ import { auth } from "../middleware/auth.js"; // step:29 importing auth middlewa
     response.send(result);
   });
   
-  router.delete("/:id",async function (request, response) { 
+  // router.delete("/:id",async function (request, response) { 
+  router.delete("/:id", auth, async function (request, response) { // step:35 passing auth middleware
     const {id} = request.params; 
     
     // db.movies.deleteOne({id:'100'}) -> db query
@@ -70,7 +73,8 @@ import { auth } from "../middleware/auth.js"; // step:29 importing auth middlewa
   
   }); 
   
-  router.put("/:id",async function (request, response) { 
+  // router.put("/:id",async function (request, response) {
+  router.put("/:id", auth, async function (request, response) { // step:35 passing auth middleware
     const {id} = request.params; 
     const data = request.body;
     // db.movies.updateOne({id:'100'},{$set:{rating:9}}) -> db query
