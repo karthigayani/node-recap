@@ -1,3 +1,4 @@
+// custom middleware
 // This auth.js checks the token valid or not.
 
 import jwt from "jsonwebtoken"; // step:32 importing jwt.
