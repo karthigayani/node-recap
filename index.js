@@ -5,6 +5,7 @@ import { MongoClient } from "mongodb";
 import * as dotenv from "dotenv";
 import moviesRouter from "./routes/movies.route.js";
 import userRouter from "./routes/users.route.js";
+import cors from "cors"; // importing CORS middleware
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ console.log("Mongo is connected !!!"); // This will execute only when the connec
 //Applying middleware in common place, to avoid repeating it again nd again.
  
 app.use(express.json()); // It checks all request which contain body or not. If body present means , it applies the middleware express.json().
+app.use(cors()); // CORS middleware
 
 app.get("/", function (request, response) {
   response.send("Hello🙋‍♂️, world🌏 🎊✨🤩");
